@@ -58,8 +58,8 @@ function App() {
 
   function addTodolist(title: string) {
     let todolist: TodolistType = {id: v1(), title: title, filter: "all"};
-    setTodolists([todolist,...todolists]);
-    setTasks({...tasks,[todolist.id]: []})
+    setTodolists([todolist, ...todolists]);
+    setTasks({...tasks, [todolist.id]: []})
   }
 
   function changeStatus(id: string, isDone: boolean, todolistId: string) {
@@ -83,6 +83,14 @@ function App() {
     }
   }
 
+  function onChangeTodolistTitle(newTitle: string, todolistId: string) {
+    let todolist = todolists.find(tl => tl.id === todolistId);
+    if (todolist) {
+      todolist.title = newTitle;
+      setTodolists([...todolists])
+    }
+  }
+
   function removeTodolist(id: string) {
     // засунем в стейт список тудулистов, id которых не равны тому, который нужно выкинуть
     setTodolists(todolists.filter(tl => tl.id !== id));
@@ -92,7 +100,7 @@ function App() {
     setTasks({...tasks});
   }
 
-  function onChangeTitleTask(id:string, newTitle: string, todolistId: string) {
+  function onChangeTitleTask(id: string, newTitle: string, todolistId: string) {
     let todolistTasks = tasks[todolistId];
     let task = todolistTasks.find(t => t.id === id);
     if (task) {
@@ -129,6 +137,7 @@ function App() {
           filter={tl.filter}
           removeTodolist={removeTodolist}
           onChangeTitleTask={onChangeTitleTask}
+          onChangeTodolistTitle={onChangeTodolistTitle}
         />
       })
       }
