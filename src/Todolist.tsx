@@ -19,6 +19,7 @@ type PropsType = {
   changeTaskStatus: (id: string, isDone: boolean, todolistId: string) => void
   removeTodolist: (id: string) => void
   filter: FilterValuesType
+  onChangeTitleTask: (taskId:string, newTitle: string,todolistId: string) => void
 }
 
 export function Todolist(props: PropsType) {
@@ -30,7 +31,7 @@ export function Todolist(props: PropsType) {
   const onActiveClickHandler = () => props.changeFilter("active", props.id);
   const onCompletedClickHandler = () => props.changeFilter("completed", props.id);
 
-  function addTask(newTitle:string) {
+  function addTask(newTitle: string) {
     props.addTask(newTitle, props.id)
   }
 
@@ -38,21 +39,27 @@ export function Todolist(props: PropsType) {
     <h3> {props.title}
       <button onClick={removeTodolist}>x</button>
     </h3>
-    <AddItemComponent addItem={addTask} />
+    <AddItemComponent addItem={addTask}/>
     <ul>
       {props.tasks.map(t => {
-          const onClickHandler = () => props.removeTask(t.id, props.id)
-          const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-            let newIsDoneValue = e.currentTarget.checked;
-            props.changeTaskStatus(t.id, newIsDoneValue, props.id);
-          }
+        const onClickHandler = () => props.removeTask(t.id, props.id)
+        const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+          let newIsDoneValue = e.currentTarget.checked;
+          props.changeTaskStatus(t.id, newIsDoneValue, props.id);
+        }
 
-          return <li key={t.id} className={t.isDone ? "is-done" : ""}>
-            <input type="checkbox" onChange={onChangeHandler} checked={t.isDone}/>
-            <EditebleSpan title={t.title}/>
-            <button onClick={onClickHandler}>x</button>
-          </li>
-        })
+        function onChangeTitleTask(newTitle: string) {
+          props.onChangeTitleTask(t.id, newTitle,props.id)
+        }
+
+        return <li key={t.id} className={t.isDone ? "is-done" : ""}>
+          <input type="checkbox" onChange={onChangeHandler} checked={t.isDone}/>
+
+          <EditebleSpan title={t.title} onChangeTitle={onChangeTitleTask}/>
+
+          <button onClick={onClickHandler}>x</button>
+        </li>
+      })
       }
     </ul>
     <div>

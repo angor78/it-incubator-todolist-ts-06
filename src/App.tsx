@@ -41,7 +41,7 @@ function App() {
     //достанем нужный массив по todolistId:
     let todolistTasks = tasks[todolistId];
     // перезапишем в этом объекте массив для нужного тудулиста отфилтрованным массивом:
-    tasks[todolistId] = todolistTasks.filter(t => t.id != id);
+    tasks[todolistId] = todolistTasks.filter(t => t.id !== id);
     // засетаем в стейт копию объекта, чтобы React отреагировал перерисовкой
     setTasks({...tasks});
   }
@@ -85,11 +85,20 @@ function App() {
 
   function removeTodolist(id: string) {
     // засунем в стейт список тудулистов, id которых не равны тому, который нужно выкинуть
-    setTodolists(todolists.filter(tl => tl.id != id));
+    setTodolists(todolists.filter(tl => tl.id !== id));
     // удалим таски для этого тудулиста из второго стейта, где мы храним отдельно таски
     delete tasks[id]; // удаляем св-во из объекта... значением которого являлся массив тасок
     // засетаем в стейт копию объекта, чтобы React отреагировал перерисовкой
     setTasks({...tasks});
+  }
+
+  function onChangeTitleTask(id:string, newTitle: string, todolistId: string) {
+    let todolistTasks = tasks[todolistId];
+    let task = todolistTasks.find(t => t.id === id);
+    if (task) {
+      task.title = newTitle;
+      setTasks({...tasks});
+    }
   }
 
   return (
@@ -119,6 +128,7 @@ function App() {
           changeTaskStatus={changeStatus}
           filter={tl.filter}
           removeTodolist={removeTodolist}
+          onChangeTitleTask={onChangeTitleTask}
         />
       })
       }
