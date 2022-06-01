@@ -1,17 +1,17 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 
 export type addItemComponentPropsType = {
-  addTask: (newTitle: string, id: string) => void
-  id: string
+  addItem: (newTitle: string) => void
+
 }
 export const AddItemComponent = (props: addItemComponentPropsType) => {
   let [title, setTitle] = useState("")
   let [error, setError] = useState<string | null>(null)
 
-  const addTask = () => {
+  const addItem = () => {
     let newTitle = title.trim();
     if (newTitle !== "") {
-      props.addTask(newTitle, props.id);
+      props.addItem(newTitle);
       setTitle("");
     } else {
       setError("Title is required");
@@ -25,7 +25,7 @@ export const AddItemComponent = (props: addItemComponentPropsType) => {
   const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     setError(null);
     if (e.charCode === 13) {
-      addTask();
+      addItem();
     }
   }
 
@@ -36,7 +36,7 @@ export const AddItemComponent = (props: addItemComponentPropsType) => {
              onKeyPress={onKeyPressHandler}
              className={error ? "error" : ""}
       />
-      <button onClick={addTask}>+</button>
+      <button onClick={addItem}>+</button>
       {error && <div className="error-message">{error}</div>}
     </div>
   )
